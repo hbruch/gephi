@@ -41,9 +41,10 @@
  */
 package org.gephi.visualization.swing;
 
+import com.jogamp.newt.event.MouseAdapter;
+import com.jogamp.newt.event.MouseEvent;
+import com.jogamp.newt.event.MouseListener;
 import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -61,7 +62,7 @@ import org.gephi.visualization.opengl.AbstractEngine;
  *
  * @author Mathieu Bastian
  */
-public class GraphDrawableImpl extends GLAbstractListener implements VizArchitecture, GraphDrawable {
+public abstract class GraphDrawableImpl extends GLAbstractListener implements VizArchitecture, GraphDrawable {
 
     protected Component graphComponent;
     protected AbstractEngine engine;
@@ -118,7 +119,7 @@ public class GraphDrawableImpl extends GLAbstractListener implements VizArchitec
                     scheduler.setFps(target);
                 }
             };
-            graphComponent.addMouseListener(graphMouseAdapter);
+            addMouseListener(graphMouseAdapter);
         } else if (vizController.getVizConfig().isPauseLoopWhenMouseOut()) {
             graphMouseAdapter = new MouseAdapter() {
                 @Override
@@ -131,7 +132,7 @@ public class GraphDrawableImpl extends GLAbstractListener implements VizArchitec
                     engine.stopDisplay();
                 }
             };
-            graphComponent.addMouseListener(graphMouseAdapter);
+            addMouseListener(graphMouseAdapter);
         }
     }
 
@@ -144,7 +145,7 @@ public class GraphDrawableImpl extends GLAbstractListener implements VizArchitec
 
     public void destroy() {
         if (graphMouseAdapter != null) {
-            graphComponent.removeMouseListener(graphMouseAdapter);
+            removeMouseListener(graphMouseAdapter);
         }
     }
 
@@ -357,4 +358,8 @@ public class GraphDrawableImpl extends GLAbstractListener implements VizArchitec
     public void dispose(GLAutoDrawable glad) {
         /* FIXME: jbilcke: what should it do? is it new in JOGL2? */
     }
+
+    abstract protected void addMouseListener(MouseListener graphMouseListener);
+    
+    abstract protected void removeMouseListener(MouseListener graphMouseListener);
 }

@@ -41,11 +41,14 @@
  */
 package org.gephi.visualization.swing;
 
+import com.jogamp.newt.event.MouseListener;
+import com.jogamp.newt.event.awt.AWTMouseAdapter;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import javax.media.opengl.awt.GLJPanel;
 import org.gephi.visualization.GraphLimits;
 import org.gephi.visualization.VizController;
@@ -58,11 +61,13 @@ public class GraphPanel extends GraphDrawableImpl {
 
     private GLJPanel gljPanel;
     private NumberFormat formatter;
-
+    private HashMap <MouseListener, AWTMouseAdapter> awtMouseAdaters;
+    
     public GraphPanel() {
         super();
         formatter = NumberFormat.getNumberInstance();
         formatter.setMaximumFractionDigits(1);
+        awtMouseAdaters = new HashMap<MouseListener, AWTMouseAdapter>();
 
         //Init GLJPanel as the drawable
         gljPanel = new GLJPanel(getCaps(), null) {
@@ -113,5 +118,20 @@ public class GraphPanel extends GraphDrawableImpl {
         yP[3] = viewport.get(3) - limits.getMinYviewport();
         g.setColor(Color.red);
         g.drawPolygon(xP, yP, 4);
+    }
+    
+    @Override
+    protected void addMouseListener(MouseListener graphMouseListener) {
+        AWTMouseAdapter mouseAdapter = new AWTMouseAdapter(graphMouseListener, gljPanel);
+        awtMouseAdaters.put(graphMouseListener, mouseAdapter);
+        mouseAdapter.addTo(graphComponent);
+    }
+    
+    @Override
+    protected void removeMouseListener(MouseListener graphMouseListener) {
+        AWTMouseAdapter mouseAdapter = awtMouseAdaters.remove(graphMouseListener);
+        if (null != mouseAdapter) {
+            mouseAdapter.removeFrom(graphComponent);
+        }
     }
 }

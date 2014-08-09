@@ -41,9 +41,12 @@
  */
 package org.gephi.visualization.swing;
 
+import com.jogamp.newt.event.MouseListener;
+import com.jogamp.newt.event.awt.AWTMouseAdapter;
 import com.jogamp.opengl.util.gl2.GLUT;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.HashMap;
 import javax.media.opengl.GL2;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
@@ -58,9 +61,12 @@ public class GraphCanvas extends GraphDrawableImpl {
 
     private final GLCanvas glCanvas;
     private final GLUT glut = new GLUT();
+    private HashMap <MouseListener, AWTMouseAdapter> awtMouseAdaters;
+    
 
     public GraphCanvas() {
         super();
+        awtMouseAdaters = new HashMap<MouseListener, AWTMouseAdapter>();
         glCanvas = new GLCanvas(getCaps());
         super.initDrawable(glCanvas);
         glCanvas.setMinimumSize(new Dimension(0, 0));   //Fix Canvas resize Issue
@@ -97,5 +103,20 @@ public class GraphCanvas extends GraphDrawableImpl {
             gl.glPopMatrix();
         }
         super.render3DScene(gl, glu);
+    }
+    
+    @Override
+    protected void addMouseListener(MouseListener graphMouseListener) {
+        AWTMouseAdapter mouseAdapter = new AWTMouseAdapter(graphMouseListener, glCanvas);
+        awtMouseAdaters.put(graphMouseListener, mouseAdapter);
+        mouseAdapter.addTo(graphComponent);
+    }
+    
+    @Override
+    protected void removeMouseListener(MouseListener graphMouseListener) {
+        AWTMouseAdapter mouseAdapter = awtMouseAdaters.remove(graphMouseListener);
+        if (null != mouseAdapter) {
+            mouseAdapter.removeFrom(graphComponent);
+        }
     }
 }

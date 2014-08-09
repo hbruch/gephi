@@ -42,6 +42,7 @@
 package org.gephi.visualization.swing;
 
 import com.jogamp.newt.awt.NewtCanvasAWT;
+import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.gl2.GLUT;
 import java.awt.Component;
@@ -101,5 +102,15 @@ public class NewtGraphCanvas extends GraphDrawableImpl {
             gl.glPopMatrix();
         }
         super.render3DScene(gl, glu);
+    }
+    
+    @Override
+    protected void addMouseListener(MouseListener graphMouseAdapter) {
+        glCanvas.getNEWTChild().addMouseListener(graphMouseAdapter);
+    }
+    
+    @Override
+    protected void removeMouseListener(MouseListener graphMouseAdapter) {
+        glCanvas.getNEWTChild().removeMouseListener(graphMouseAdapter);
     }
 }
