@@ -65,7 +65,7 @@ public class GraphPanel extends GraphDrawableImpl {
         formatter.setMaximumFractionDigits(1);
 
         //Init GLJPanel as the drawable
-        gljPanel = new GLJPanel(getCaps(), null, null) {
+        gljPanel = new GLJPanel(getCaps(), null) {
             //@Override
             @Override
             public void paintComponent(Graphics g) {

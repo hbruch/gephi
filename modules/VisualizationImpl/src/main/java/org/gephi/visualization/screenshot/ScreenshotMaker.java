@@ -59,7 +59,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.GLDrawableFactory;
-import javax.media.opengl.GLPbuffer;
+import javax.media.opengl.GLOffscreenAutoDrawable;
 import javax.media.opengl.GLProfile;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -173,7 +173,7 @@ public class ScreenshotMaker implements VizArchitecture {
 
         //Buffer
 
-        GLPbuffer pbuffer = GLDrawableFactory.getFactory(profile).createGLPbuffer(device, caps, null, tileWidth, tileHeight, null);
+        GLOffscreenAutoDrawable offScreenAutoDrawable = GLDrawableFactory.getFactory(profile).createOffscreenAutoDrawable(device, caps, null, tileWidth, tileHeight);
         BufferedImage image = null;
         if (transparentBackground) {
             image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_4BYTE_ABGR);
@@ -195,14 +195,14 @@ public class ScreenshotMaker implements VizArchitecture {
 
         //Get gl
         //GLContext oldContext = GLContext.getCurrent();
-        GLContext context = pbuffer.getContext();
+        GLContext context = offScreenAutoDrawable.getContext();
         if (context.makeCurrent() == GLContext.CONTEXT_NOT_CURRENT) {
-            throw new RuntimeException("Error making pbuffer's context current");
+            throw new RuntimeException("Error making offScreenAutoDrawable's context current");
         }
 
         System.out.println("Disabling snapshot");
 
-        GL2 gl = pbuffer.getGL().getGL2();
+        GL2 gl = offScreenAutoDrawable.getGL().getGL2();
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 
@@ -218,12 +218,12 @@ public class ScreenshotMaker implements VizArchitecture {
         //Render in buffer
         do {
             tileRenderer.beginTile(gl);
-            drawable.renderScreenshot(pbuffer);
+            drawable.renderScreenshot(offScreenAutoDrawable);
         } while (tileRenderer.endTile(gl));
 
         //Clean
         context.release();
-        pbuffer.destroy();
+        offScreenAutoDrawable.destroy();
 
 
         //Textrender - back to 2D
