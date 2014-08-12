@@ -301,6 +301,9 @@ public class TextManager implements VizArchitecture {
                     Rectangle2D r = renderer.getBounds(txt);
                     objectModel.setTextBounds(r);
                 }
+                if (txt == null || txt.isEmpty()) {
+                    return;
+                }
                 model.colorMode.textNodeColor(this, objectModel);
                 float sizeFactor = textData.getSize() * model.sizeMode.getSizeFactor3d(model.nodeSizeFactor, objectModel);
 
@@ -327,6 +330,9 @@ public class TextManager implements VizArchitecture {
                     }
                     Rectangle2D r = renderer.getBounds(txt);
                     objectModel.setTextBounds(r);
+                }
+                if (txt == null || txt.isEmpty()) {
+                    return;
                 }
                 model.colorMode.textEdgeColor(this, objectModel);
 //                float sizeFactor = textData.getSize() * model.sizeMode.getSizeFactor3d(model.edgeSizeFactor, objectModel);
@@ -404,14 +410,9 @@ public class TextManager implements VizArchitecture {
             Node node = objectModel.getNode();
             TextProperties textData = (TextProperties) node.getTextProperties();
             if (textData != null) {
-                String txt = textData.getText();
-                if (nodeRefresh) {
-                    txt = buildText(node, objectModel, model.getNodeTextColumns());
-                    if (txt == null || txt.isEmpty()) {
-                        return;
-                    }
-                    Rectangle2D r = renderer.getBounds(txt);
-                    objectModel.setTextBounds(r);
+                String txt = nodeRefresh ? buildText(node, objectModel, model.getNodeTextColumns()) : textData.getText();
+                if (txt == null || txt.isEmpty()) {
+                    return;
                 }
                 model.colorMode.textNodeColor(this, objectModel);
                 float sizeFactor = textData.getSize() * model.sizeMode.getSizeFactor2d(model.nodeSizeFactor, objectModel);
@@ -433,15 +434,11 @@ public class TextManager implements VizArchitecture {
             Edge edge = objectModel.getEdge();
             TextProperties textData = (TextProperties) edge.getTextProperties();
             if (textData != null) {
-                String txt = textData.getText();
-                if (edgeRefresh) {
-                    txt = buildText(edge, objectModel, model.getEdgeTextColumns());
-                    if (txt == null || txt.isEmpty()) {
-                        return;
-                    }
-                    Rectangle2D r = renderer.getBounds(txt);
-                    objectModel.setTextBounds(r);
+                String txt = edgeRefresh?buildText(edge, objectModel, model.getEdgeTextColumns()):textData.getText();
+                if (txt == null || txt.isEmpty()) {
+                    return;
                 }
+                
                 model.colorMode.textEdgeColor(this, objectModel);
 //                float sizeFactor = textData.getSize() * model.sizeMode.getSizeFactor2d(model.nodeSizeFactor, objectModel);
                 float sizeFactor = 1f;
