@@ -195,6 +195,8 @@ public class ScreenshotMaker implements VizArchitecture {
 
         //Get gl
         //GLContext oldContext = GLContext.getCurrent();
+        // To have context created implicitly, call display
+        offScreenAutoDrawable.display();
         GLContext context = offScreenAutoDrawable.getContext();
         if (context.makeCurrent() == GLContext.CONTEXT_NOT_CURRENT) {
             throw new RuntimeException("Error making offScreenAutoDrawable's context current");
