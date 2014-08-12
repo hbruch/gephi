@@ -70,7 +70,7 @@ public class DefaultPreset extends PreviewPreset {
         properties.put(PreviewProperty.EDGE_THICKNESS, 1f);
 
         properties.put(PreviewProperty.EDGE_LABEL_COLOR, new DependantOriginalColor(DependantOriginalColor.Mode.ORIGINAL));
-        properties.put(PreviewProperty.EDGE_LABEL_FONT, new Font("Arial", Font.PLAIN, 10));
+        properties.put(PreviewProperty.EDGE_LABEL_FONT, new Font("SansSerif", Font.PLAIN, 10));
         properties.put(PreviewProperty.EDGE_LABEL_MAX_CHAR, 30);
         properties.put(PreviewProperty.EDGE_LABEL_OUTLINE_COLOR, new DependantColor(Color.WHITE));
         properties.put(PreviewProperty.EDGE_LABEL_OUTLINE_OPACITY, 80f);
@@ -84,7 +84,7 @@ public class DefaultPreset extends PreviewPreset {
         properties.put(PreviewProperty.NODE_LABEL_BOX_COLOR, new DependantColor(DependantColor.Mode.PARENT));
         properties.put(PreviewProperty.NODE_LABEL_BOX_OPACITY, 100f);
         properties.put(PreviewProperty.NODE_LABEL_COLOR, new DependantOriginalColor(Color.BLACK));
-        properties.put(PreviewProperty.NODE_LABEL_FONT, new Font("Arial", Font.PLAIN, 12));
+        properties.put(PreviewProperty.NODE_LABEL_FONT, new Font("SansSerif", Font.PLAIN, 12));
         properties.put(PreviewProperty.NODE_LABEL_MAX_CHAR, 30);
         properties.put(PreviewProperty.NODE_LABEL_OUTLINE_COLOR, new DependantColor(Color.WHITE));
         properties.put(PreviewProperty.NODE_LABEL_OUTLINE_OPACITY, 80f);

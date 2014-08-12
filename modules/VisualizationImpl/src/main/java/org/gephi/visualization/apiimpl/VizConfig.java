@@ -120,8 +120,8 @@ public class VizConfig {
     public static final Color DEFAULT_EDGE_UNIQUE_COLOR = new Color(0.5f, 0.5f, 0.5f, 0.5f);
     public static final Color DEFAULT_NODE_LABEL_COLOR = new Color(0f, 0f, 0f, 1f);
     public static final Color DEFAULT_EDGE_LABEL_COLOR = new Color(0.5f, 0.5f, 0.5f, 1f);
-    public static final Font DEFAULT_NODE_LABEL_FONT = new Font("Arial", Font.BOLD, 32);
-    public static final Font DEFAULT_EDGE_LABEL_FONT = new Font("Arial", Font.BOLD, 32);
+    public static final Font DEFAULT_NODE_LABEL_FONT = new Font("SansSerif", Font.BOLD, 32);
+    public static final Font DEFAULT_EDGE_LABEL_FONT = new Font("SansSerif", Font.BOLD, 32);
     public static final boolean DEFAULT_LABEL_SELECTION_ONLY = false;
     public static final boolean DEFAULT_SELECTEDEDGE_HAS_COLOR = false;
     public static final Color DEFAULT_SELECTEDEDGE_IN_COLOR = new Color(32, 95, 154, 255);
