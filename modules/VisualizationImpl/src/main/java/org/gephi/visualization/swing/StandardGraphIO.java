@@ -157,7 +157,7 @@ public class StandardGraphIO implements GraphIO, VizArchitecture {
             float x = e.getX();
             float y = e.getY();
             mousePosition[0] = x;
-            mousePosition[1] = graphDrawable.viewport.get(3) - y;
+            mousePosition[1] = graphDrawable.getViewportHeight() - y;
         }
 
         if (dragging) {
@@ -199,7 +199,7 @@ public class StandardGraphIO implements GraphIO, VizArchitecture {
         float x = e.getX();
         float y = e.getY();
         mousePosition[0] = x;
-        mousePosition[1] = graphDrawable.viewport.get(3) - y;
+        mousePosition[1] = graphDrawable.getViewportHeight() - y;
 
         engine.getScheduler().requireUpdateSelection();
         vizEventManager.mouseMove();
@@ -269,10 +269,10 @@ public class StandardGraphIO implements GraphIO, VizArchitecture {
 
             //Remet à jour aussi la mousePosition pendant le drag, notamment pour coller quand drag released
             mousePosition[0] = x;
-            mousePosition[1] = graphDrawable.viewport.get(3) - y;
+            mousePosition[1] = graphDrawable.getViewportHeight() - y;
 
-            mouseDrag3d[0] = (float) ((graphDrawable.viewport.get(2) / 2 - x) / graphDrawable.draggingMarker[0] + graphDrawable.cameraTarget[0]);
-            mouseDrag3d[1] = (float) ((y - graphDrawable.viewport.get(3) / 2) / graphDrawable.draggingMarker[1] + graphDrawable.cameraTarget[1]);
+            mouseDrag3d[0] = (float) ((graphDrawable.getViewportWidth() / 2 - x) / graphDrawable.draggingMarker[0] + graphDrawable.cameraTarget[0]);
+            mouseDrag3d[1] = (float) ((y - graphDrawable.getViewportHeight() / 2) / graphDrawable.draggingMarker[1] + graphDrawable.cameraTarget[1]);
 
             if (vizController.getVizConfig().isSelectionEnable() && engine.isRectangleSelection()) {
                 if (!dragging) {
@@ -349,8 +349,8 @@ public class StandardGraphIO implements GraphIO, VizArchitecture {
         //Get mouse position within the clipping plane
         float mouseX = MathUtil.clamp(mousePosition[0], limits.getMinXviewport(), limits.getMaxXviewport());
         float mouseY = MathUtil.clamp(mousePosition[1], limits.getMinYviewport(), limits.getMaxYviewport());
-        mouseX = mouseX - graphDrawable.viewport.get(2) / 2f;       //Set to centric coordinates
-        mouseY = mouseY - graphDrawable.viewport.get(3) / 2f;
+        mouseX = mouseX - graphDrawable.getViewportWidth() / 2f;       //Set to centric coordinates
+        mouseY = mouseY - graphDrawable.getViewportHeight() / 2f;
 
         //Transform in 3d coordinates
         mouseX /= -graphDrawable.draggingMarker[0];
@@ -439,8 +439,8 @@ public class StandardGraphIO implements GraphIO, VizArchitecture {
     @Override
     public float[] getMousePosition3d() {
         float[] m = new float[2];
-        m[0] = mousePosition[0] - graphDrawable.viewport.get(2) / 2f;       //Set to centric coordinates
-        m[1] = mousePosition[1] - graphDrawable.viewport.get(3) / 2f;
+        m[0] = mousePosition[0] - graphDrawable.getViewportWidth() / 2f;       //Set to centric coordinates
+        m[1] = mousePosition[1] - graphDrawable.getViewportHeight() / 2f;
         m[0] /= -graphDrawable.draggingMarker[0];        //Transform in 3d coordinates
         m[1] /= -graphDrawable.draggingMarker[1];
         m[0] += graphDrawable.cameraTarget[0];
@@ -502,8 +502,8 @@ public class StandardGraphIO implements GraphIO, VizArchitecture {
         float graphWidth = Math.abs(limits.getMaxXoctree() - limits.getMinXoctree());
         float graphHeight = Math.abs(limits.getMaxYoctree() - limits.getMinYoctree());
 
-        float currentDistanceGraphRatioX = Math.abs(graphDrawable.viewport.get(2) / (float) graphDrawable.getDraggingMarkerX()) / graphDrawable.cameraLocation[2];
-        float currentDistanceGraphRatioY = Math.abs(graphDrawable.viewport.get(3) / (float) graphDrawable.getDraggingMarkerY()) / graphDrawable.cameraLocation[2];
+        float currentDistanceGraphRatioX = Math.abs(graphDrawable.getViewportWidth() / (float) graphDrawable.getDraggingMarkerX()) / graphDrawable.cameraLocation[2];
+        float currentDistanceGraphRatioY = Math.abs(graphDrawable.getViewportHeight() / (float) graphDrawable.getDraggingMarkerY()) / graphDrawable.cameraLocation[2];
         float newCameraLocationX = graphWidth / currentDistanceGraphRatioX;
         float newCameraLocationY = graphHeight / currentDistanceGraphRatioY;
         float newCameraLocation = Math.max(newCameraLocationX, newCameraLocationY);
