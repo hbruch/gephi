@@ -41,11 +41,11 @@
  */
 package org.gephi.ui.tools.plugin.edit;
 
-import org.gephi.data.attributes.api.AttributeColumn;
-import org.gephi.data.attributes.type.DynamicType;
+import org.gephi.attribute.api.AttributeUtils;
+import org.gephi.attribute.api.Column;
 import org.gephi.dynamic.api.DynamicModel;
 import org.gephi.dynamic.api.DynamicModel.TimeFormat;
-import org.gephi.graph.api.Attributable;
+import org.gephi.graph.api.Element;
 import org.gephi.ui.tools.plugin.edit.EditWindowUtils.AttributeValueWrapper;
 
 /**
@@ -54,12 +54,12 @@ import org.gephi.ui.tools.plugin.edit.EditWindowUtils.AttributeValueWrapper;
  */
 public class MultipleRowsAttributeValueWrapper implements AttributeValueWrapper {
 
-    private Attributable[] rows;
-    private AttributeColumn column;
+    private Element[] rows;
+    private Column column;
     private Object value;
     private TimeFormat currentTimeFormat;
 
-    public MultipleRowsAttributeValueWrapper(Attributable [] rows, AttributeColumn column, TimeFormat currentTimeFormat) {
+    public MultipleRowsAttributeValueWrapper(Element [] rows, Column column, TimeFormat currentTimeFormat) {
         this.rows = rows;
         this.column = column;
         this.currentTimeFormat = currentTimeFormat;
@@ -68,11 +68,11 @@ public class MultipleRowsAttributeValueWrapper implements AttributeValueWrapper 
 
     private String convertToStringIfNotNull() {
         if (value != null) {
-            if (value instanceof DynamicType) {
-                return ((DynamicType) value).toString(currentTimeFormat == DynamicModel.TimeFormat.DOUBLE);
-            } else {
+//                    if (value instanceof TimestampSet) {//When type is dynamic, take care to show proper time format
+//                        return ((TimestampSet) value).toString(currentTimeFormat == TimeFormat.DOUBLE);
+//    
                 return value.toString();
-            }
+//  
         } else {
             return null;
         }
@@ -80,8 +80,8 @@ public class MultipleRowsAttributeValueWrapper implements AttributeValueWrapper 
 
     private void setValueToAllEdges(Object object) {
         this.value = object;
-        for (Attributable row : rows) {
-            row.getAttributes().setValue(column.getIndex(), value);
+        for (Element row : rows) {
+            row.setAttribute(column, value);
         }
     }
 
@@ -182,6 +182,6 @@ public class MultipleRowsAttributeValueWrapper implements AttributeValueWrapper 
 
     @Override
     public void setValueAsString(String value) {
-        setValueToAllEdges(column.getType().parse(value));
+        setValueToAllEdges(AttributeUtils.parse(value, column.getTypeClass()));
     }
 }

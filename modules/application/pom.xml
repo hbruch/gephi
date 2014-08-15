@@ -258,10 +258,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>visualization</artifactId>
         </dependency>
-        <!--        <dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>tools-plugin</artifactId>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>welcome-screen</artifactId>
@@ -414,11 +414,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>appearance-plugin-ui</artifactId>
-        </dependency><!--
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>desktop-tools</artifactId>
-        </dependency>
+        </dependency><!--
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>desktop-timeline</artifactId>

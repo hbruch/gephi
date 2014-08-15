@@ -41,8 +41,21 @@
  */
 package org.gephi.ui.tools.plugin.edit;
 
-import java.util.EnumSet;
-import org.gephi.data.attributes.api.AttributeType;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import org.gephi.attribute.time.TimestampBooleanSet;
+import org.gephi.attribute.time.TimestampByteSet;
+import org.gephi.attribute.time.TimestampCharSet;
+import org.gephi.attribute.time.TimestampDoubleSet;
+import org.gephi.attribute.time.TimestampFloatSet;
+import org.gephi.attribute.time.TimestampIntegerSet;
+import org.gephi.attribute.time.TimestampLongSet;
+import org.gephi.attribute.time.TimestampSet;
+import org.gephi.attribute.time.TimestampShortSet;
+import org.gephi.attribute.time.TimestampStringSet;
 
 /**
  *
@@ -53,33 +66,47 @@ public class EditWindowUtils {
     /**
      * These AttributeTypes are not supported by default by netbeans property editor. We will use attributes of these types as Strings and parse them.
      */
-    public static EnumSet<AttributeType> NotSupportedTypes = EnumSet.of(
-            AttributeType.BIGINTEGER,
-            AttributeType.BIGDECIMAL,
-            AttributeType.LIST_BIGDECIMAL,
-            AttributeType.LIST_BIGINTEGER,
-            AttributeType.LIST_BOOLEAN,
-            AttributeType.LIST_BYTE,
-            AttributeType.LIST_CHARACTER,
-            AttributeType.LIST_DOUBLE,
-            AttributeType.LIST_FLOAT,
-            AttributeType.LIST_INTEGER,
-            AttributeType.LIST_LONG,
-            AttributeType.LIST_SHORT,
-            AttributeType.LIST_STRING,
-            AttributeType.TIME_INTERVAL,
-            AttributeType.DYNAMIC_BIGDECIMAL,
-            AttributeType.DYNAMIC_BIGINTEGER,
-            AttributeType.DYNAMIC_BOOLEAN,
-            AttributeType.DYNAMIC_BYTE,
-            AttributeType.DYNAMIC_CHAR,
-            AttributeType.DYNAMIC_DOUBLE,
-            AttributeType.DYNAMIC_FLOAT,
-            AttributeType.DYNAMIC_INT,
-            AttributeType.DYNAMIC_LONG,
-            AttributeType.DYNAMIC_SHORT,
-            AttributeType.DYNAMIC_STRING);
+    public static final Set<Class> NOT_SUPPORTED_TYPES;
+    
+    static {
+        final Set<Class> notSupportedTypes = new HashSet<Class>();
+        
+        //Prinitives Array
+        notSupportedTypes.add(Boolean[].class);
+        notSupportedTypes.add(boolean[].class);
+        notSupportedTypes.add(Integer[].class);
+        notSupportedTypes.add(int[].class);
+        notSupportedTypes.add(Short[].class);
+        notSupportedTypes.add(short[].class);
+        notSupportedTypes.add(Long[].class);
+        notSupportedTypes.add(long[].class);
+        notSupportedTypes.add(BigInteger[].class);
+        notSupportedTypes.add(Byte[].class);
+        notSupportedTypes.add(byte[].class);
+        notSupportedTypes.add(Float[].class);
+        notSupportedTypes.add(float[].class);
+        notSupportedTypes.add(Double[].class);
+        notSupportedTypes.add(double[].class);
+        notSupportedTypes.add(BigDecimal[].class);
+        notSupportedTypes.add(Character[].class);
+        notSupportedTypes.add(char[].class);
+        
+        //Dynamic
+        notSupportedTypes.add(TimestampSet.class);
+        notSupportedTypes.add(TimestampBooleanSet.class);
+        notSupportedTypes.add(TimestampIntegerSet.class);
+        notSupportedTypes.add(TimestampShortSet.class);
+        notSupportedTypes.add(TimestampLongSet.class);
+        notSupportedTypes.add(TimestampByteSet.class);
+        notSupportedTypes.add(TimestampFloatSet.class);
+        notSupportedTypes.add(TimestampDoubleSet.class);
+        notSupportedTypes.add(TimestampCharSet.class);
+        notSupportedTypes.add(TimestampStringSet.class);
 
+        //Assign
+        NOT_SUPPORTED_TYPES = Collections.unmodifiableSet(notSupportedTypes);
+    }
+     
     interface AttributeValueWrapper {
 
         public Byte getValueByte();

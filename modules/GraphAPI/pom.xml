@@ -20,9 +20,9 @@
         <repository>
             <id>gephi-snapshots</id>
             <name>Gephi 3rd Party</name>
-            <!-- <url>http://nexus.gephi.org/nexus/content/repositories/snapshots/</url> -->
-            <!-- Working with local graphstore: -->
-            <url>C:\Users\Eduardo\.m2</url>
+            <!--<url>http://nexus.gephi.org/nexus/content/repositories/snapshots/</url>-->
+            <!-- Working with local graphstore (merged eduardos changes: -->
+            <url>C:\Users\Holger\.m2</url>
         </repository>
     </repositories>
 
@@ -30,11 +30,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>project-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>graphstore-api</artifactId>
-            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

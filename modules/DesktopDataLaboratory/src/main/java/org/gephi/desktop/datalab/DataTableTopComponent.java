@@ -228,13 +228,16 @@ public class DataTableTopComponent extends TopComponent implements AWTEventListe
                 enableTableControls();
 
                 graphModel = gc.getGraphModel();
-                graphObserver = graphModel.getGraphObserver(graphModel.getGraph(), false);
+                graphObserver = graphModel.createGraphObserver(graphModel.getGraph(), false);
 
                 refreshAllOnce();
             }
 
             public void unselect(Workspace workspace) {
-                graphObserver = null;
+                if (null != graphObserver) {
+                    graphObserver.destroy();
+                    graphObserver = null;
+                }
                 
                 graphModel = null;
                 dataTablesModel = null;
@@ -257,7 +260,7 @@ public class DataTableTopComponent extends TopComponent implements AWTEventListe
             Lookup.getDefault().lookup(DataTablesController.class).setDataTablesEventListener(DataTableTopComponent.this);
             graphModel = gc.getGraphModel();
             
-            graphObserver = graphModel.getGraphObserver(graphModel.getGraph(), false);
+            graphObserver = graphModel.createGraphObserver(graphModel.getGraph(), false);
         }
 
         //Filter

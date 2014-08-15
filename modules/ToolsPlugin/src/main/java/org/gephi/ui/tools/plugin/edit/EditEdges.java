@@ -42,16 +42,17 @@ Portions Copyrighted 2011 Gephi Consortium.
 package org.gephi.ui.tools.plugin.edit;
 
 import java.awt.Color;
-import org.gephi.data.attributes.api.AttributeRow;
-import org.gephi.data.attributes.api.AttributeType;
-import org.gephi.data.attributes.api.AttributeValue;
+import org.gephi.attribute.api.Column;
+import org.gephi.attribute.api.Table;
 import org.gephi.datalab.api.AttributeColumnsController;
 import org.gephi.dynamic.api.DynamicController;
 import org.gephi.dynamic.api.DynamicModel;
 import org.gephi.dynamic.api.DynamicModel.TimeFormat;
 import org.gephi.graph.api.Edge;
-import org.gephi.graph.api.EdgeData;
+import org.gephi.graph.api.Element;
+import org.gephi.graph.api.GraphController;
 import org.gephi.ui.tools.plugin.edit.EditWindowUtils.*;
+import org.gephi.ui.tools.plugin.edit.EditWindowUtils.AttributeValueWrapper;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
@@ -80,7 +81,7 @@ public class EditEdges extends AbstractNode {
     public EditEdges(Edge edge) {
         super(Children.LEAF);
         this.edges = new Edge[]{edge};
-        setName(edge.getEdgeData().getLabel());
+        setName(edge.getLabel());
         multipleEdges = false;
     }
 
@@ -95,7 +96,7 @@ public class EditEdges extends AbstractNode {
         if (multipleEdges) {
             setName(NbBundle.getMessage(EditEdges.class, "EditEdges.multiple.elements"));
         } else {
-            setName(edges[0].getEdgeData().getLabel());
+            setName(edges[0].getLabel());
         }
     }
 
@@ -121,37 +122,38 @@ public class EditEdges extends AbstractNode {
             if (edges.length > 1) {
                 set.setDisplayName(NbBundle.getMessage(EditEdges.class, "EditEdges.attributes.text.multiple"));
             } else {
-                set.setDisplayName(NbBundle.getMessage(EditEdges.class, "EditEdges.attributes.text", edges[0].getEdgeData().getLabel()));
+                set.setDisplayName(NbBundle.getMessage(EditEdges.class, "EditEdges.attributes.text", edges[0].getLabel()));
             }
 
-            AttributeRow row = (AttributeRow) edges[0].getEdgeData().getAttributes();
+            Element row = edges[0];
             AttributeValueWrapper wrap;
-            for (AttributeValue value : row.getValues()) {
+            Table table = Lookup.getDefault().lookup(GraphController.class).getAttributeModel().getEdgeTable();
+            for (Column column : table.getColumns()) {
 
                 if (multipleEdges) {
-                    wrap = new MultipleRowsAttributeValueWrapper(edges, value.getColumn(),currentTimeFormat);
+                    wrap = new MultipleRowsAttributeValueWrapper(edges, column,currentTimeFormat);
                 } else {
-                    wrap = new SingleRowAttributeValueWrapper(edges[0], value.getColumn(),currentTimeFormat);
+                    wrap = new SingleRowAttributeValueWrapper(edges[0], column,currentTimeFormat);
                 }
-                AttributeType type = value.getColumn().getType();
+                Class type = column.getTypeClass();
                 Property p;
-                if (ac.canChangeColumnData(value.getColumn())) {
+                if (ac.canChangeColumnData(column)) {
                     //Editable column, provide "set" method:
-                    if (!EditWindowUtils.NotSupportedTypes.contains(type)) {//The AttributeType can be edited by default:
-                        p = new PropertySupport.Reflection(wrap, type.getType(), "getValue" + type.getType().getSimpleName(), "setValue" + type.getType().getSimpleName());
+                    if (!EditWindowUtils.NOT_SUPPORTED_TYPES.contains(type)) {//The AttributeType can be edited by default:
+                        p = new PropertySupport.Reflection(wrap, type, "getValue" + type.getSimpleName(), "setValue" + type.getSimpleName());
                     } else {//Use the AttributeType as String:
                         p = new PropertySupport.Reflection(wrap, String.class, "getValueAsString", "setValueAsString");
                     }
                 } else {
                     //Not editable column, do not provide "set" method:
-                    if (!EditWindowUtils.NotSupportedTypes.contains(type)) {//The AttributeType can be edited by default:
-                        p = new PropertySupport.Reflection(wrap, type.getType(), "getValue" + type.getType().getSimpleName(), null);
+                    if (!EditWindowUtils.NOT_SUPPORTED_TYPES.contains(type)) {//The AttributeType can be edited by default:
+                        p = new PropertySupport.Reflection(wrap, type, "getValue" + type.getSimpleName(), null);
                     } else {//Use the AttributeType as String:
                         p = new PropertySupport.Reflection(wrap, String.class, "getValueAsString", null);
                     }
                 }
-                p.setDisplayName(value.getColumn().getTitle());
-                p.setName(value.getColumn().getId());
+                p.setDisplayName(column.getTitle());
+                p.setName(column.getId());
                 set.put(p);
             }
             return set;
@@ -186,7 +188,7 @@ public class EditEdges extends AbstractNode {
                 Edge edge = edges[0];
                 Sheet.Set set = new Sheet.Set();
                 set.setName("properties");
-                set.setDisplayName(NbBundle.getMessage(EditEdges.class, "EditEdges.properties.text", edge.getEdgeData().getLabel()));
+                set.setDisplayName(NbBundle.getMessage(EditEdges.class, "EditEdges.properties.text", edge.getLabel()));
 
                 Property p;
 
@@ -214,21 +216,12 @@ public class EditEdges extends AbstractNode {
         }
 
         public Color getEdgeColor() {
-            EdgeData data = edge.getEdgeData();
-            if(data.r()<0||data.g()<0||data.b()<0||data.alpha()<0){
-                return null;//Not specific color for edge
-            }
-
-            return new Color(data.r(), data.g(), data.b(), data.alpha());
+            return edge.getColor();
         }
 
         public void setEdgeColor(Color c) {
             if (c != null) {
-                EdgeData data = edge.getEdgeData();
-                data.setR(c.getRed() / 255f);
-                data.setG(c.getGreen() / 255f);
-                data.setB(c.getBlue() / 255f);
-                data.setAlpha(c.getAlpha() / 255f);
+                edge.setColor(c);
             }
         }
     }
@@ -250,13 +243,11 @@ public class EditEdges extends AbstractNode {
         public void setEdgesColor(Color c) {
             if (c != null) {
                 edgesColor = c;
-                EdgeData data;
                 for (Edge edge : edges) {
-                    data = edge.getEdgeData();
-                    data.setR(c.getRed() / 255f);
-                    data.setG(c.getGreen() / 255f);
-                    data.setB(c.getBlue() / 255f);
-                    data.setAlpha(c.getAlpha() / 255f);
+                    edge.setR(c.getRed() / 255f);
+                    edge.setG(c.getGreen() / 255f);
+                    edge.setB(c.getBlue() / 255f);
+                    edge.setAlpha(c.getAlpha() / 255f);
                 }
             }
         }
