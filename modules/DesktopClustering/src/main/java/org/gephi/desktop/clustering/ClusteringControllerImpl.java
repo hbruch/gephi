@@ -43,25 +43,22 @@ package org.gephi.desktop.clustering;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.gephi.attribute.api.AttributeModel;
+import org.gephi.attribute.api.Column;
+import org.gephi.attribute.api.Origin;
 import org.gephi.clustering.api.Cluster;
 import org.gephi.clustering.api.ClusteringController;
 import org.gephi.clustering.api.ClusteringModel;
 import org.gephi.clustering.spi.Clusterer;
 import org.gephi.clustering.spi.ClustererBuilder;
-import org.gephi.data.attributes.api.AttributeColumn;
-import org.gephi.data.attributes.api.AttributeController;
-import org.gephi.data.attributes.api.AttributeModel;
-import org.gephi.data.attributes.api.AttributeOrigin;
-import org.gephi.data.attributes.api.AttributeType;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphModel;
-import org.gephi.graph.api.HierarchicalGraph;
 import org.gephi.graph.api.Node;
 import org.gephi.project.api.ProjectController;
-import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.longtask.api.LongTaskErrorHandler;
 import org.gephi.utils.longtask.api.LongTaskExecutor;
+import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.visualization.VizController;
 import org.gephi.visualization.api.selection.SelectionManager;
 import org.openide.awt.StatusDisplayer;
@@ -92,7 +89,7 @@ public class ClusteringControllerImpl implements ClusteringController {
     public void clusterize(final Clusterer clusterer) {
         //Get Graph
         GraphController gc = Lookup.getDefault().lookup(GraphController.class);
-        final GraphModel graphModel = gc.getModel();
+        final GraphModel graphModel = gc.getGraphModel();
 
         //Model
         final ClusteringModel model = Lookup.getDefault().lookup(ProjectController.class).getCurrentWorkspace().getLookup().lookup(ClusteringModel.class);
@@ -121,18 +118,18 @@ public class ClusteringControllerImpl implements ClusteringController {
         Cluster[] clusters = clusterer.getClusters();
         if (clusters != null && clusters.length > 0) {
             ClustererBuilder builder = getBuilder(clusterer);
-            AttributeModel am = Lookup.getDefault().lookup(AttributeController.class).getModel();
+            AttributeModel am = Lookup.getDefault().lookup(GraphController.class).getAttributeModel();
             String id = "clustering_" + builder.getName();
             String title = "Clustering (" + builder.getName() + ")";
-            AttributeColumn col = am.getNodeTable().getColumn(id);
+            Column col = am.getNodeTable().getColumn(id);
             if (col == null) {
-                col = am.getNodeTable().addColumn(id, title, AttributeType.INT, AttributeOrigin.COMPUTED, null);
+                col = am.getNodeTable().addColumn(id, title, Integer.class, Origin.DATA /* TODO: Better COMPUTED? */, null, true);
                 StatusDisplayer.getDefault().setStatusText("A new column \"" + title + "\" has been created");
             }
             for (int i = 0; i < clusters.length; i++) {
                 Integer clusterId = new Integer(i);
                 for (Node n : clusters[i].getNodes()) {
-                    n.getNodeData().getAttributes().setValue(col.getIndex(), clusterId);
+                    n.setAttribute(col, clusterId);
                 }
             }
         }
@@ -145,45 +142,51 @@ public class ClusteringControllerImpl implements ClusteringController {
     }
 
     public void groupCluster(Cluster cluster) {
-        GraphModel gm = Lookup.getDefault().lookup(GraphController.class).getModel();
-        if (gm != null) {
-            HierarchicalGraph graph = gm.getHierarchicalGraphVisible();
-            Node[] newGroup = cluster.getNodes();
-            float centroidX = 0;
-            float centroidY = 0;
-            int len = 0;
-            Node group = graph.groupNodes(newGroup);
-            cluster.setMetaNode(group);
-
-            group.getNodeData().setLabel("Group");
-            group.getNodeData().setSize(10f);
-            for (Node child : newGroup) {
-                centroidX += child.getNodeData().x();
-                centroidY += child.getNodeData().y();
-                len++;
-            }
-            centroidX /= len;
-            centroidY /= len;
-            group.getNodeData().setX(centroidX);
-            group.getNodeData().setY(centroidY);
-        }
+//         TODO really to remove?
+//         GraphModel gm = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
+//         if (gm != null) {
+//              HierarchicalGraph graph = gm.getHierarchicalGraphVisible();
+//             Node[] newGroup = cluster.getNodes();
+//             float centroidX = 0;
+//             float centroidY = 0;
+//             int len = 0;
+//             Node group = graph.groupNodes(newGroup);
+//             cluster.setMetaNode(group);
+// 
+//             group.setLabel("Group");
+//             group.setSize(10f);
+//             for (Node child : newGroup) {
+//                 centroidX += child.x();
+//                 centroidY += child.y();
+//                 len++;
+//             }
+//             centroidX /= len;
+//             centroidY /= len;
+//             group.setX(centroidX);
+//             group.setY(centroidY);
+//        }
     }
 
     public void ungroupCluster(Cluster cluster) {
-        GraphModel gm = Lookup.getDefault().lookup(GraphController.class).getModel();
-        if (gm != null) {
-            HierarchicalGraph graph = gm.getHierarchicalGraphVisible();
-            graph.ungroupNodes(cluster.getMetaNode());
-            cluster.setMetaNode(null);
-        }
+        // TODO really to remove?
+        // GraphModel gm = Lookup.getDefault().lookup(GraphController.class).getModel();
+        // if (gm != null) {
+        //    Graph graph = gm.getGraphVisible();
+        //    graph.ungroupNodes(cluster.getMetaNode());
+        //    cluster.setMetaNode(null);
+        //}
     }
 
     public boolean canGroup(Cluster cluster) {
-        return cluster.getMetaNode() == null;
+        // TODO really to remove?
+        // return cluster.getMetaNode() == null;
+        return false;
     }
 
     public boolean canUngroup(Cluster cluster) {
-        return cluster.getMetaNode() != null;
+        // TODO really to remove?
+        // return cluster.getMetaNode() != null;
+        return false;
     }
 
     private ClustererBuilder getBuilder(Clusterer clusterer) {

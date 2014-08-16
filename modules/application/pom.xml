@@ -309,11 +309,11 @@
         <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>filters-api</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>clustering-api</artifactId>
-        </dependency>-->
+        </dependency>
         <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ui-propertyeditor</artifactId>
@@ -371,10 +371,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>perspective-api</artifactId>
         </dependency>
-        <!--        <dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>desktop-clustering</artifactId>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>import-plugin-ui</artifactId>
@@ -430,11 +430,11 @@
         <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>desktop-filters</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>clustering-plugin</artifactId>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>core-library-wrapper</artifactId>

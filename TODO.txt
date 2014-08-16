@@ -1,0 +1,16 @@
+The state of this branch is work in progress, as the transition to jogl2 and the new graphstore
+is not yet completed.
+
+The following issues are still open (not yet tracked via github, as 0.9 is not yet released publicly):
+* A number of TODOs in various source files:
+  * e.g.: TODOs to support editing of DynamicAttributes DataLaboratory & ToolsPlugin
+* Rectangle selection seems not to work any more
+* a couple of plugins are not yet migrated (and commented in modules/application/pom.xml)
+* Writing a migration hint, since many third party plugins will break with the transition to gephi 0.9
+* DataLaboratory DuplicateColumn seems not to recognize column name duplications (there seems to be a case issue for column ids managed by the store)
+* 
+
+Questions:
+* HierarchicalGraph was removed. So, grouping of nodes is no longer a supported featue? => adapt ClusteringController to reflect the changes
+
+
