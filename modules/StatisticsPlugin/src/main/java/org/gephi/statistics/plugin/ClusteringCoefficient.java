@@ -666,7 +666,7 @@ public class ClusteringCoefficient implements Statistics, LongTask {
         Column clusteringCol = nodeTable.getColumn("clustering");
 
         if (clusteringCol == null) {
-            clusteringCol = nodeTable.addColumn("clustering", "Clustering Coefficient", Double.class, new Double(0));
+            clusteringCol = nodeTable.addColumn("clustering", "Clustering Coefficient", Float.class, new Float(0));
         }
 
         return clusteringCol;
