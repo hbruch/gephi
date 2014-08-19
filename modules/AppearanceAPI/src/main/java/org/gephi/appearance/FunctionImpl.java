@@ -66,21 +66,23 @@ public class FunctionImpl implements RankingFunction, PartitionFunction, SimpleF
     protected final TransformerUI transformerUI;
     protected final PartitionImpl partition;
     protected final RankingImpl ranking;
+    protected final boolean isNode;
 
-    public FunctionImpl(AppearanceModelImpl model, Column column, Transformer transformer, TransformerUI transformerUI) {
-        this(model, column, transformer, transformerUI, null, null);
+    public FunctionImpl(AppearanceModelImpl model, boolean isNode, Column column, Transformer transformer, TransformerUI transformerUI) {
+        this(model, isNode, column, transformer, transformerUI, null, null);
     }
 
-    public FunctionImpl(AppearanceModelImpl model, Column column, Transformer transformer, TransformerUI transformerUI, RankingImpl ranking) {
-        this(model, column, transformer, transformerUI, null, ranking);
+    public FunctionImpl(AppearanceModelImpl model, boolean isNode, Column column, Transformer transformer, TransformerUI transformerUI, RankingImpl ranking) {
+        this(model, isNode, column, transformer, transformerUI, null, ranking);
     }
 
-    public FunctionImpl(AppearanceModelImpl model, Column column, Transformer transformer, TransformerUI transformerUI, PartitionImpl partition) {
-        this(model, column, transformer, transformerUI, partition, null);
+    public FunctionImpl(AppearanceModelImpl model, boolean isNode, Column column, Transformer transformer, TransformerUI transformerUI, PartitionImpl partition) {
+        this(model, isNode, column, transformer, transformerUI, partition, null);
     }
 
-    public FunctionImpl(AppearanceModelImpl model, Column column, Transformer transformer, TransformerUI transformerUI, PartitionImpl partition, RankingImpl ranking) {
+    public FunctionImpl(AppearanceModelImpl model, boolean isNode, Column column, Transformer transformer, TransformerUI transformerUI, PartitionImpl partition, RankingImpl ranking) {
         this.model = model;
+        this.isNode = isNode;
         this.column = column;
         try {
             this.transformer = transformer.getClass().newInstance();
@@ -122,6 +124,11 @@ public class FunctionImpl implements RankingFunction, PartitionFunction, SimpleF
     @Override
     public TransformerUI getUI() {
         return transformerUI;
+    }
+
+    @Override
+    public boolean isNode() {
+        return isNode;
     }
 
     @Override

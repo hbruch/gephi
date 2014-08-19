@@ -157,10 +157,10 @@ public class AppearanceModelImpl implements AppearanceModel {
                 for (Transformer transformer : Lookup.getDefault().lookupAll(Transformer.class)) {
                     if (transformer instanceof SimpleTransformer) {
                         if (transformer.isNode()) {
-                            nodeFunctions.add(new FunctionImpl(this, null, transformer, uis.get(transformer.getClass())));
+                            nodeFunctions.add(new FunctionImpl(this, true, null, transformer, uis.get(transformer.getClass())));
                         }
                         if (transformer.isEdge()) {
-                            edgeFunctions.add(new FunctionImpl(this, null, transformer, uis.get(transformer.getClass())));
+                            edgeFunctions.add(new FunctionImpl(this, false, null, transformer, uis.get(transformer.getClass())));
                         }
                     }
                 }
@@ -175,9 +175,9 @@ public class AppearanceModelImpl implements AppearanceModel {
                             if (!col.isProperty()) {
                                 Index index = localScale ? graphModel.getNodeIndex(graphModel.getVisibleView()) : graphModel.getNodeIndex();
                                 if (transformer instanceof RankingTransformer && isRanking(col) && !attributeNodeFunctions.contains(col)) {
-                                    nodeFunctions.add(new FunctionImpl(this, col, transformer, uis.get(transformer.getClass()), new RankingImpl(col, index, defaultInterpolator)));
+                                    nodeFunctions.add(new FunctionImpl(this, true, col, transformer, uis.get(transformer.getClass()), new RankingImpl(col, index, defaultInterpolator)));
                                 } else if (transformer instanceof PartitionTransformer && isPartition(col) && !attributeNodeFunctions.contains(col)) {
-                                    nodeFunctions.add(new FunctionImpl(this, col, transformer, uis.get(transformer.getClass()), new PartitionImpl(col, index)));
+                                    nodeFunctions.add(new FunctionImpl(this, true, col, transformer, uis.get(transformer.getClass()), new PartitionImpl(col, index)));
                                 }
                                 foundNodeColumns.add(col);
                             }
@@ -188,9 +188,9 @@ public class AppearanceModelImpl implements AppearanceModel {
                             if (!col.isProperty() && col.isNumber()) {
                                 Index index = localScale ? graphModel.getEdgeIndex(graphModel.getVisibleView()) : graphModel.getEdgeIndex();
                                 if (transformer instanceof RankingTransformer && isRanking(col) && !attributeEdgeFunctions.contains(col)) {
-                                    edgeFunctions.add(new FunctionImpl(this, col, transformer, uis.get(transformer.getClass()), new RankingImpl(col, index, defaultInterpolator)));
+                                    edgeFunctions.add(new FunctionImpl(this, false, col, transformer, uis.get(transformer.getClass()), new RankingImpl(col, index, defaultInterpolator)));
                                 } else if (transformer instanceof PartitionTransformer && isPartition(col) && !attributeEdgeFunctions.contains(col)) {
-                                    edgeFunctions.add(new FunctionImpl(this, col, transformer, uis.get(transformer.getClass()), new PartitionImpl(col, index)));
+                                    edgeFunctions.add(new FunctionImpl(this, false, col, transformer, uis.get(transformer.getClass()), new PartitionImpl(col, index)));
                                 }
                                 foundEdgeColumns.add(col);
                             }

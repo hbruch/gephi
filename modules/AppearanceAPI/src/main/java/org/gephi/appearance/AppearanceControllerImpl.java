@@ -111,7 +111,7 @@ public class AppearanceControllerImpl implements AppearanceController {
         if (model != null) {
             GraphModel graphModel = model.getGraphModel();
             ElementIterable<? extends Element> iterable;
-            if (function.getTransformer().isNode()) {
+            if (function.isNode()) {
                 iterable = graphModel.getGraphVisible().getNodes();
             } else {
                 iterable = graphModel.getGraphVisible().getEdges();

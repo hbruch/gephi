@@ -58,6 +58,8 @@ public interface Function {
     public TransformerUI getUI();
 
     public boolean isSimple();
+    
+    public boolean isNode();
 
     public boolean isAttribute();
 
